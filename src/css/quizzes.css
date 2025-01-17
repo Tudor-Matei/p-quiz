@@ -2,6 +2,7 @@
   width: 100%;
   padding: calc(var(--nav-top-distance) * 5) var(--side-distance);
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
   gap: 2rem;
 }
@@ -52,6 +53,22 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.quizzes-quiz-action__labels {
+  display: flex;
+  gap: 2rem;
+}
+
+.quizzes-quiz-action__label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.quizzes-quiz-action__label img {
+  width: 20px;
+  height: 20px;
 }
 
 /* media queries */

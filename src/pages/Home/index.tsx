@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import "../../css/index.css";
-import useRedirectOnAuth from "../../utils/useRedirectOnAuth";
+import useRedirectOnAuth from "../../hooks/useRedirectOnAuth";
 
 export default function Home() {
   const isLoggedIn = useRedirectOnAuth("/dashboard", true);

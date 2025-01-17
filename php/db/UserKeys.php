@@ -32,7 +32,7 @@ class UserKeys
     $key_fetch_result_rows = mysqli_fetch_assoc($key_fetch_result);
     if ($key_fetch_result_rows === false) {
       mysqli_stmt_close($statement);
-      return ["error" => "There has been fetching the associative array for the key."];
+      return ["error" => "There has been an error fetching the associative array for the key."];
     }
 
     mysqli_stmt_close($statement);

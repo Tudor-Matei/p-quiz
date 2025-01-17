@@ -2,15 +2,19 @@ import { useFormik } from "formik";
 import { useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
 import "../../css/quiz-take.css";
+import computeResults from "../../utils/computeResults";
 import { IQuestion } from "../../utils/IQuiz";
+import { IUserData } from "../../utils/UserDataContext";
 import { IDataResults, IFormState, IFormStateError } from "./FormStateType";
 import Question from "./Question";
 
 export default function QuizTake({
   questions,
+  userData,
   setResultsData,
 }: {
   questions: IQuestion[];
+  userData: IUserData;
   setResultsData: React.Dispatch<React.SetStateAction<IDataResults[] | null>>;
 }) {
   const { quizId } = useParams();
@@ -32,25 +36,25 @@ export default function QuizTake({
     },
 
     onSubmit: (formValues: IFormState) => {
-      const resultsData: IDataResults[] = [];
+      const resultsData: IDataResults[] = computeResults(questions, formValues);
+      type Response = { error: string | null; data?: IUserData };
 
-      for (const question of questions) {
-        const answersForCurrentQuestion = formValues[question.title];
-        let isCorrectSoFar = true;
-        for (const currentAnswer of answersForCurrentQuestion) {
-          const correctAnswerOption = question.options.find(({ title }) => title === currentAnswer.title);
-          if (correctAnswerOption === undefined) continue;
+      fetch("http://localhost/p-quiz/php/take_quiz.php", {
+        method: "POST",
+        body: JSON.stringify({
+          user_id: userData.user_id,
+          quiz_id: quizId,
+          results: resultsData,
+          timestamp: new Date().toLocaleString(),
+        }),
+        credentials: "include",
+      })
+        .then((response) => response.json())
+        .then(({ error, data }: Response) => {
+          if (error) console.error(error);
 
-          if (
-            (!correctAnswerOption.isCorrectAnswer && currentAnswer.markedAsCorrect) ||
-            (correctAnswerOption.isCorrectAnswer && !currentAnswer.markedAsCorrect)
-          ) {
-            isCorrectSoFar = false;
-            break;
-          }
-        }
-        resultsData.push({ title: question.title, isCorrect: isCorrectSoFar });
-      }
+          console.log(data);
+        });
 
       setResultsData(resultsData);
     },

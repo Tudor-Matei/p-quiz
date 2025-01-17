@@ -3,6 +3,7 @@
 include_once 'utils/setup.php';
 include_once 'db/connect.php';
 include_once 'db/UserKeys.php';
+include_once 'utils/Key.php';
 include_once 'utils/is_logged_in.php';
 include_once 'utils/generate_random_id.php';
 
@@ -20,12 +21,19 @@ if ($log_in_state === false) {
   die();
 }
 
-
 if (!isset($_POST['title']) || !isset($_POST['subject']) || !isset($_POST['tags']) || !isset($_POST['questions'])) {
   http_response_code(400);
   echo json_encode(["error" => "Bad user input."]);
   die();
 }
+
+$user_id = Key::decode($_COOKIE['user_key']);
+if ($user_id === false) {
+  http_response_code(401);
+  echo json_encode(["error" => "Invalid user key."]);
+  die();
+}
+
 
 $title = trim(filter_var($_POST['title'], FILTER_SANITIZE_STRING));
 $subject = trim(filter_var($_POST['subject'], FILTER_SANITIZE_STRING));
@@ -79,11 +87,11 @@ for ($i = 0; $i < sizeof($questions); $i++) {
 }
 
 $quiz_id = generate_random_id(6);
-$quiz_insert_query = "INSERT INTO quizzes (id, title, subject, tags, questions) VALUES (?,?,?,?,?)";
+$quiz_insert_query = "INSERT INTO quizzes (id, author_id, title, subject, tags, questions) VALUES (?,?,?,?,?,?)";
 $stringified_questions = json_encode($questions);
 
 $statement = mysqli_prepare($connection, $quiz_insert_query);
-if (!mysqli_stmt_bind_param($statement, "sssss", $quiz_id, $title, $subject, $tags, $stringified_questions)) {
+if (!mysqli_stmt_bind_param($statement, "ssssss", $quiz_id, $user_id, $title, $subject, $tags, $stringified_questions)) {
   http_response_code(500);
   echo json_encode(["error" => "There has been an error binding parameters to the query."]);
   die();

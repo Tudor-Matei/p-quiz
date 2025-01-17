@@ -1,6 +1,7 @@
 export interface IFormState {
   [questionTitle: string]: { title: string; markedAsCorrect: boolean }[];
 }
+
 export interface IFormRawData {
   title: string;
   type: "single" | "multiple";

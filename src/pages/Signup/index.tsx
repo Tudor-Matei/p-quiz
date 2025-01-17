@@ -2,10 +2,10 @@ import { useFormik } from "formik";
 import { useContext, useMemo } from "react";
 import { Link } from "react-router-dom";
 import "../../css/forms.css";
+import useRedirectOnAuth from "../../hooks/useRedirectOnAuth";
 import { IUserData, IUserDataContext, UserDataContext } from "../../utils/UserDataContext";
 import isEmailValid from "../../utils/emailRegex";
 import checkIfFormIsValid from "../../utils/isFormValid";
-import useRedirectOnAuth from "../../utils/useRedirectOnAuth";
 import { IFormStateTypeError } from "./FormStateType";
 
 export default function Signup() {

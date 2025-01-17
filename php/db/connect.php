@@ -2,7 +2,7 @@
 
 $dbhost = "localhost";
 $dbuser = "root";
-$dbpass = "admin";
+$dbpass = "";
 $dbname = "pquiz";
 $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 if ($connection === false) {

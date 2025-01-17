@@ -4,6 +4,7 @@ export interface IQuestionResponse {
   subject: string;
   tags: string;
   questions: string;
+  student_attempts: number;
 }
 
 export interface IQuestion {
